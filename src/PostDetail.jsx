@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchComments } from "./api";
 import "./PostDetail.css";
 
-export function PostDetail({ post }) {
+export function PostDetail({ post, deleteMutation }) {
 
   const id = post.id;
   // replace with useQuery
@@ -23,7 +23,17 @@ export function PostDetail({ post }) {
   return (
     <>
       <h3 style={{ color: "blue" }}>{post.title}</h3>
-      <button>Delete</button> <button>Update title</button>
+      <div>
+        <button onClick={() => deleteMutation.mutate(post.id)}>Delete</button>
+        {
+          deleteMutation.isPending && <p className="loading">Deleting the post</p>
+        }
+        {deleteMutation.isError && <p className="error">Error deleting the post: {deleteMutation.error.toString()}</p>}
+        {deleteMutation.isSuccess && <p className="success">Post "successfully" deleted</p>}
+      </div>
+      <div>
+        <button>Update title</button>
+      </div>
       <p>{post.body}</p>
       <h4>Comments</h4>
       {data.map((comment) => (
